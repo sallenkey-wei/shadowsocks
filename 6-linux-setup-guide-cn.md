@@ -69,7 +69,10 @@ Debian / Ubuntu:
 apt-get install python-pip
 pip install git+https://github.com/shadowsocks/shadowsocks.git@master
 ```
-
+此地址很慢，备用地址
+```
+sudo pip install https://github.com/shadowsocks/shadowsocks/archive/master.zip -U
+```
 CentOS:  
 ```
 yum install python-setuptools && easy_install pip
@@ -172,6 +175,33 @@ lsof –i:1080
 ```
 
 kill 相应的 pid 即可
+### 7、设置shadowsocks开机启动
+#### 方法一：
+编辑/etc/rc.local文件，添加一下内容
+```
+#!/bin/sh -e
+sslocal -c /etc/shadowsocks.json&
+exit 0
+```
+#### 方法二（实测不行，未深究）：
+使用systemd来实现shadowsocks开机启动
+sudo vim /etc/systemd/system/shadowsocks.service
+```
+[Unit]
+Description=Shadowsocks Client Service
+After=network.targe
+
+[Service]
+Type=simple
+User=root
+ExecStart=/usr/bin/sslocal -c /etc/shadowsocks.json
+
+[Install]
+WantedBy=multi-user.target
+```
+让配置生效：
+systemctl enable /etc/systemd/system/shadowsocks.service
+重启测试。
 
 ## 	配置 Firefox 的代理
 
