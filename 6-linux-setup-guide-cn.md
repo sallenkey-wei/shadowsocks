@@ -127,7 +127,27 @@ sudo apt-get install proxychains
 ```
 socks5 127.0.0.1 1080
 ```
-
+安装完成后可能会出现以下错误：
+```
+Proxychains-3.1(http://proxychains.sf.net)
+ERROR:ld.so: object 'libproxychains.so.3' from LD_PRELOAD cannot be preloaded (cannot open shared object file): ignored.
+```
+libproxychains.so.3库的路径错误，
+```
+locate libproxychains.so.3 
+```
+其路径为:
+```
+/usr/lib/x86_64-linux-gnu/libproxychains.so.3
+```
+我们要将 /usr/bin/proxychains文件中的
+```
+export LD_PRELOAD=libproxychains.so.3
+```
+修改为：
+```
+export LD_PRELOAD=/usr/lib/x86_64-linux-gnu/libproxychains.so.3
+```
 接着我们就可以直接 用 `proxychains` + 命令的方式使用代理，例如
 
 ```
@@ -145,7 +165,7 @@ sudo proxychains apt-get xxxx
 ```
 ### 6、 关闭 Shadowsocks
 
-在终端内输入
+在终端内输入（查看占用1080端口的应用pid）
 
 ```
 lsof –i:1080
